@@ -1,39 +1,99 @@
-<!doctype html><html lang=ar dir=rtl><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<!doctype html><html lang=ar dir=rtl><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>منبه الدوام</title>
 <style>
-body{margin:0;padding:18px;font:17px/1.6 system-ui,sans-serif;background:#1f2d3d;color:#f1f5f9}
-h1{font-size:22px;margin:0 0 14px}
-.c{background:#2a3b4f;border-radius:6px;padding:14px;margin:12px 0}
-input,select,button{display:block;width:100%;box-sizing:border-box;font:inherit;padding:11px;margin:8px 0;border:1px solid #475d75;border-radius:6px;background:#1f2d3d;color:inherit}
-button{background:#f2a900;color:#1f2d3d;border:0;font-weight:700}
-small{color:#a9b8c8}
+:root{--bg:#f3f5f7;--s:#fff;--ink:#17212b;--mu:#5b6875;--ln:#dde3e9;--pr:#1b4f8f;--on:#fff;--ok:#1c8a4e;--lt:#c0392b;--wn:#b7791f}
+@media(prefers-color-scheme:dark){:root{--bg:#10161c;--s:#19222b;--ink:#e7edf2;--mu:#93a1ae;--ln:#2a3642;--pr:#7db3f2;--on:#0d1b2a;--ok:#4cc17f;--lt:#ff8f80;--wn:#e3b04b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif}
+header{background:var(--pr);color:var(--on);padding:calc(16px + env(safe-area-inset-top,0px)) 18px 16px}
+header h1{margin:0;font-size:20px}
+main{max-width:560px;margin:0 auto;padding:6px 14px 28px}
+.c{background:var(--s);border:1px solid var(--ln);border-radius:12px;padding:14px 16px;margin:12px 0}
+h2{margin:0 0 6px;font-size:15px;color:var(--mu);font-weight:600}
+small{color:var(--mu)}
+input,button{font:inherit;color:inherit}
+input{width:100%;padding:10px 12px;margin:6px 0;border:1px solid var(--ln);border-radius:8px;background:var(--bg)}
+button{border:0;border-radius:8px;padding:10px 16px;font-weight:600}
+.b{background:var(--pr);color:var(--on);width:100%;margin-top:8px}
+.o{background:none;border:1px solid var(--pr);color:var(--pr)}
+.chip{display:inline-block;padding:1px 12px;border-radius:99px;font-size:14px;font-weight:700;background:var(--pr);color:var(--on)}
+.chip.r{background:none;border:1px solid var(--ok);color:var(--ok)}
+.chip.v{background:none;border:1px solid var(--wn);color:var(--wn)}
+.p{position:relative;display:flex;align-items:center;gap:10px;padding:10px 34px 10px 0}
+.p::before{content:"";position:absolute;right:9px;top:0;bottom:0;width:2px;background:var(--ln)}
+.p:first-of-type::before{top:50%}.p:last-child::before{bottom:50%}
+.p i{position:absolute;right:0;top:50%;margin-top:-10px;width:20px;height:20px;border-radius:50%;background:var(--s);border:2px solid var(--ln)}
+.p.n i{border-color:var(--pr)}.p.d i{background:var(--ok);border-color:var(--ok)}.p.l i{border-color:var(--lt)}
+.p span{flex:1}.p.d span{color:var(--mu)}.p em{color:var(--lt);font-style:normal;font-size:14px}
+.p button{padding:6px 14px;background:none;border:1px solid var(--pr);color:var(--pr)}
+.p.d button{border-color:var(--ok);color:var(--ok)}
+.m{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.m button{width:38px;height:38px;padding:0;background:var(--bg);color:var(--ink);border-radius:50%;font-size:20px}
+.g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.g b{font-size:12px;color:var(--mu);font-weight:600;padding:4px 0}
+.g i{font-style:normal;width:38px;height:38px;line-height:38px;border-radius:50%;margin:auto}
+.g .u{background:var(--pr);color:var(--on);font-weight:700}
+.g .v{background:none;border:2px dashed var(--wn);color:var(--wn);line-height:34px}
+.g .t{box-shadow:inset 0 0 0 2px var(--ink)}
+.g .s{outline:2px solid var(--pr);outline-offset:2px}
+summary{color:var(--mu)}
 </style>
-<h1>منبه الدوام</h1>
+<header><h1>منبه الدوام</h1></header>
+<main>
 <div class=c id=nx></div>
-<div class=c><label>أول يوم دوام (مرجع الدورة)<input type=date id=a></label></div>
-<div class=c><b>ملاحظة للدوام</b>
-<select id=d></select>
-<label><small>وقت التذكير قبل الدوام بيوم</small><input type=time id=r value=15:00></label>
-<input id=t placeholder="شنو لازم تسوي؟"><button onclick=add()>إضافة</button></div>
+<div class=c id=pk></div>
+<div class=c><div class=m><button onclick=mv(-1)>›</button><b id=mt></b><button onclick=mv(1)>‹</button></div>
+<div class=g id=cal></div>
+<p><small id=cl></small><br><small>● دوام &nbsp; ◌ إجازة (المنبهات موقوفة)</small></p>
+<div id=sp></div></div>
+<div class=c><h2>ملاحظة للدوام الجاي</h2><small id=nh></small>
+<label><small>وقت التذكير (قبل الدوام بيوم)</small><input type=time id=r value=15:00></label>
+<input id=t placeholder="شنو لازم تسوي؟"><button class=b onclick=add()>إضافة</button></div>
 <div id=l></div>
+<details class=c><summary>إعدادات الدورة</summary><label><small>أول يوم دوام (مرجع الدورة)</small><input type=date id=a></label></details>
+</main>
 <script>
 const D=864e5,$=i=>document.getElementById(i),S=localStorage;
-let A=S.a||'2026-11-24',N=JSON.parse(S.n||'[]');
+let A=S.a||'2026-11-24',N=JSON.parse(S.n||'[]'),K=JSON.parse(S.p||'{}'),V=JSON.parse(S.v||'{}'),M=0,Z='';
+const ky=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const day=n=>{const d=new Date(A+'T00:00');d.setDate(d.getDate()+4*n);return d};
 const at=(d,h,m,o)=>{const x=new Date(d);x.setDate(x.getDate()+o);x.setHours(h,m,0,0);return x};
-const fmt=d=>d.toLocaleDateString('ar-IQ',{weekday:'long',day:'numeric',month:'long'});
+const F='ar-IQ-u-nu-latn',fmt=d=>d.toLocaleDateString(F,{weekday:'long',day:'numeric',month:'long'});
 const L=['8 الصبح','12 الظهر','8 الليل','12 الليل','8 الصبح (آخر بصمة)'],P=[[8,0,0],[12,0,0],[20,0,0],[0,0,1],[8,0,1]];
-const cur=()=>{const t=new Date();t.setHours(0,0,0,0);return Math.max(0,Math.ceil((t-day(0))/(4*D)-1e-6))};
+const mid=()=>{const t=new Date();t.setHours(0,0,0,0);return t};
+const cur=()=>{let n=Math.max(0,Math.floor((mid()-day(0))/(4*D))-1);while(at(day(n),9,0,1)<=Date.now())n++;return n};
+const tn=()=>{const c=cur();return mid()>=day(c)?c+1:c};
+const lv=n=>V[ky(day(n))];
 function sync(){const it=[];
- for(let n=0;n<40;n++)P.forEach((p,i)=>it.push({t:+at(day(n),p[0],p[1],p[2]),title:'بصمة '+L[i],alarm:true}));
- N.forEach(x=>{const [h,m]=x.r.split(':');it.push({t:+at(day(x.n),+h,+m,-1),title:'تذكير: دوامك باجر — '+x.x,alarm:false})});
+ for(let n=0;n<40;n++)if(!lv(n))P.forEach((p,i)=>it.push({t:+at(day(n),p[0],p[1],p[2]),title:'بصمة '+L[i],alarm:true}));
+ N.forEach(x=>{if(lv(x.n))return;const [h,m]=x.r.split(':');it.push({t:+at(day(x.n),+h,+m,-1),title:'تذكير: دوامك باجر — '+x.x,alarm:false})});
  try{Android.sync(JSON.stringify(it.filter(i=>i.t>Date.now())))}catch(e){}}
-function render(){const c=cur();$('a').value=A;
- $('nx').innerHTML='الدوام الجاي: <b>'+fmt(day(c))+'</b><br><small>5 منبهات: 8 ص، 12 ظ، 8 م، 12 ل، 8 ص — وأيام الراحة صامت</small>';
- $('d').innerHTML=[0,1,2,3,4,5].map(i=>'<option value='+(c+i)+'>'+fmt(day(c+i))+'</option>').join('');
- $('l').innerHTML=N.map((x,i)=>'<div class=c>'+fmt(day(x.n))+' — تذكير '+x.r+'<br>'+x.x.replace(/</g,'&lt;')+'<button onclick=del('+i+')>حذف</button></div>').join('');
- sync()}
-function add(){const x=$('t').value.trim();if(!x)return;N.push({n:+$('d').value,r:$('r').value||'15:00',x});S.n=JSON.stringify(N);$('t').value='';render()}
-function del(i){N.splice(i,1);S.n=JSON.stringify(N);render()}
-$('a').onchange=e=>{A=e.target.value;S.a=A;render()};
-render();
+function render(){const c=cur(),dd=day(c),t=mid(),act=t>=dd,off=lv(c);
+ if(N.some(x=>x.n<c)){N=N.filter(x=>x.n>=c);S.n=JSON.stringify(N)}
+ $('a').value=A;
+ $('nx').innerHTML='<span class="chip '+(off?'v':act?'':'r')+'">'+(off?'إجازة':act?'دوام':'راحة')+'</span> <b>'+(off&&act?'اليوم إجازة':act?(t>dd?'دوامك لسه شغّال':'اليوم دوام'):'اليوم راحة')+'</b><br><small>'+(act?fmt(dd)+(t>dd?' — آخر بصمة اليوم 8 الصبح':' — ينتهي 8 الصبح باجر'):'الدوام الجاي: '+fmt(dd)+' — باقي '+Math.round((dd-t)/D)+' يوم')+(off?'<br>المنبهات موقوفة لهذا الدوام (إجازة)':'')+'</small>';
+ $('pk').style.display=act&&!off?'':'none';
+ let nf=-1;P.forEach((p,i)=>{if(nf<0&&!K[c+'-'+i])nf=i});
+ $('pk').innerHTML='<h2>بصمات الدوام</h2>'+P.map((p,i)=>{const dn=K[c+'-'+i],lt=!dn&&at(dd,p[0],p[1],p[2])<=Date.now();
+  return '<div class="p '+(dn?'d':lt?'l':i==nf?'n':'')+'"><i></i><span>'+L[i]+(lt?' <em>— لسه ما سجلت</em>':'')+'</span><button onclick=tg('+c+','+i+')>'+(dn?'✓ بصمت':'بصمت')+'</button></div>'}).join('');
+ const m=new Date(t.getFullYear(),t.getMonth()+M,1),nd=new Date(m.getFullYear(),m.getMonth()+1,0).getDate(),ds=[];
+ let h='';['سبت','أحد','اثنين','ثلاثاء','أربعاء','خميس','جمعة'].forEach(x=>h+='<b>'+x+'</b>');
+ for(let i=0;i<(m.getDay()+1)%7;i++)h+='<i></i>';
+ for(let d=1;d<=nd;d++){const x=new Date(m.getFullYear(),m.getMonth(),d),k=Math.round((x-day(0))/D),u=((k%4)+4)%4==0,kk=ky(x),v=u&&V[kk];
+  if(u)ds.push(d+(v?' (إجازة)':''));
+  h+='<i class="'+[u?'u':'',v?'v':'',+x==+t?'t':'',kk==Z?'s':''].join(' ')+'"'+(u?' onclick="sel(\''+kk+'\')"':'')+'>'+d+'</i>'}
+ $('cal').innerHTML=h;$('mt').textContent=m.toLocaleDateString(F,{month:'long',year:'numeric'});
+ $('cl').textContent='أيام الدوام: '+ds.join('، ');
+ $('sp').innerHTML=Z?'<b>'+fmt(new Date(Z+'T00:00'))+'</b> — '+(V[Z]?'إجازة':'دوام')+'<button class="b'+(V[Z]?' o':'')+'" onclick=lvT()>'+(V[Z]?'إلغاء الإجازة (رجّع المنبهات)':'خذ إجازة (كتم المنبهات)')+'</button>':'<small>اضغط على يوم دوام حتى تسوي له إجازة</small>';
+ const q=tn();$('nh').innerHTML='<br>للدوام: '+fmt(day(q))+(lv(q)?' — إجازة، التذكير موقوف':'');
+ $('l').innerHTML=N.map((x,i)=>'<div class=c><b>'+x.x.replace(/</g,'&lt;')+'</b><br><small>للدوام: '+fmt(day(x.n))+' · تذكير '+x.r+' قبله بيوم'+(lv(x.n)?' · إجازة (موقوف)':'')+'</small><br><button class=o onclick=del('+i+')>حذف</button></div>').join('')}
+function upd(){render();sync()}
+function mv(d){M+=d;render()}
+function sel(k){Z=Z==k?'':k;render()}
+function lvT(){V[Z]?delete V[Z]:V[Z]=1;S.v=JSON.stringify(V);upd()}
+function tg(n,i){const k=n+'-'+i;K[k]?delete K[k]:K[k]=1;S.p=JSON.stringify(K);render()}
+function add(){const x=$('t').value.trim();if(!x)return;N.push({n:tn(),r:$('r').value||'15:00',x});S.n=JSON.stringify(N);$('t').value='';upd()}
+function del(i){N.splice(i,1);S.n=JSON.stringify(N);upd()}
+$('a').onchange=e=>{A=e.target.value;S.a=A;M=0;upd()};
+upd();
 </script>
