@@ -1,0 +1,39 @@
+<!doctype html><html lang=ar dir=rtl><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
+<style>
+body{margin:0;padding:18px;font:17px/1.6 system-ui,sans-serif;background:#1f2d3d;color:#f1f5f9}
+h1{font-size:22px;margin:0 0 14px}
+.c{background:#2a3b4f;border-radius:6px;padding:14px;margin:12px 0}
+input,select,button{display:block;width:100%;box-sizing:border-box;font:inherit;padding:11px;margin:8px 0;border:1px solid #475d75;border-radius:6px;background:#1f2d3d;color:inherit}
+button{background:#f2a900;color:#1f2d3d;border:0;font-weight:700}
+small{color:#a9b8c8}
+</style>
+<h1>منبه الدوام</h1>
+<div class=c id=nx></div>
+<div class=c><label>أول يوم دوام (مرجع الدورة)<input type=date id=a></label></div>
+<div class=c><b>ملاحظة للدوام</b>
+<select id=d></select>
+<label><small>وقت التذكير قبل الدوام بيوم</small><input type=time id=r value=15:00></label>
+<input id=t placeholder="شنو لازم تسوي؟"><button onclick=add()>إضافة</button></div>
+<div id=l></div>
+<script>
+const D=864e5,$=i=>document.getElementById(i),S=localStorage;
+let A=S.a||'2026-11-24',N=JSON.parse(S.n||'[]');
+const day=n=>{const d=new Date(A+'T00:00');d.setDate(d.getDate()+4*n);return d};
+const at=(d,h,m,o)=>{const x=new Date(d);x.setDate(x.getDate()+o);x.setHours(h,m,0,0);return x};
+const fmt=d=>d.toLocaleDateString('ar-IQ',{weekday:'long',day:'numeric',month:'long'});
+const L=['8 الصبح','12 الظهر','8 الليل','12 الليل','8 الصبح (آخر بصمة)'],P=[[8,0,0],[12,0,0],[20,0,0],[0,0,1],[8,0,1]];
+const cur=()=>{const t=new Date();t.setHours(0,0,0,0);return Math.max(0,Math.ceil((t-day(0))/(4*D)-1e-6))};
+function sync(){const it=[];
+ for(let n=0;n<40;n++)P.forEach((p,i)=>it.push({t:+at(day(n),p[0],p[1],p[2]),title:'بصمة '+L[i],alarm:true}));
+ N.forEach(x=>{const [h,m]=x.r.split(':');it.push({t:+at(day(x.n),+h,+m,-1),title:'تذكير: دوامك باجر — '+x.x,alarm:false})});
+ try{Android.sync(JSON.stringify(it.filter(i=>i.t>Date.now())))}catch(e){}}
+function render(){const c=cur();$('a').value=A;
+ $('nx').innerHTML='الدوام الجاي: <b>'+fmt(day(c))+'</b><br><small>5 منبهات: 8 ص، 12 ظ، 8 م، 12 ل، 8 ص — وأيام الراحة صامت</small>';
+ $('d').innerHTML=[0,1,2,3,4,5].map(i=>'<option value='+(c+i)+'>'+fmt(day(c+i))+'</option>').join('');
+ $('l').innerHTML=N.map((x,i)=>'<div class=c>'+fmt(day(x.n))+' — تذكير '+x.r+'<br>'+x.x.replace(/</g,'&lt;')+'<button onclick=del('+i+')>حذف</button></div>').join('');
+ sync()}
+function add(){const x=$('t').value.trim();if(!x)return;N.push({n:+$('d').value,r:$('r').value||'15:00',x});S.n=JSON.stringify(N);$('t').value='';render()}
+function del(i){N.splice(i,1);S.n=JSON.stringify(N);render()}
+$('a').onchange=e=>{A=e.target.value;S.a=A;render()};
+render();
+</script>
