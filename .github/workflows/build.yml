@@ -1,0 +1,24 @@
+name: build
+on: [push, workflow_dispatch]
+permissions:
+  contents: write
+jobs:
+  b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p app/src/main/java/com/dutyalarm app/src/main/assets
+          mv app.gradle app/build.gradle
+          mv AndroidManifest.xml app/src/main/
+          mv *.kt app/src/main/java/com/dutyalarm/
+          mv index.html app/src/main/assets/
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: gradle/actions/setup-gradle@v3
+        with: { gradle-version: 8.5 }
+      - run: gradle assembleDebug --no-daemon
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.run_number }}
+          files: app/build/outputs/apk/debug/app-debug.apk
