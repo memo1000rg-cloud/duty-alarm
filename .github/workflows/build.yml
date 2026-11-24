@@ -8,11 +8,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          mkdir -p app/src/main/java/com/dutyalarm app/src/main/assets
+          mkdir -p app/src/main/java/com/dutyalarm app/src/main/assets app/src/main/res/mipmap-anydpi app/src/main/res/drawable-nodpi
           mv app.gradle app/build.gradle
           mv AndroidManifest.xml app/src/main/
           mv *.kt app/src/main/java/com/dutyalarm/
           mv index.html app/src/main/assets/
+          mv ic_launcher.xml app/src/main/res/mipmap-anydpi/
+          mv ic_bg.png ic_fg.png app/src/main/res/drawable-nodpi/
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 17 }
       - uses: gradle/actions/setup-gradle@v3
